@@ -6,8 +6,6 @@ The idea is:
 * Leverage the "object.remove()" so dynamic lighting can move with the tiles.
 * Present a basic approach to "texture packs" for tiles (so you can switch out tiles as you build the map.)
 
-Still testing the script (and adding door controls) but you can play around with it now.
-
 Steps to install/use:
 
 1. Add the "DungeonMapper" script.
