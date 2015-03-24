@@ -1,5 +1,5 @@
 # Dungeon-Mapper
-**Roll20 API:** Auto Dynamic Lighting That Move With The Tiles, Texture Pack Approach, User Interface And Door Control.
+**Roll20 API:** Auto Dynamic Lighting that Moves with the Tiles, Texture Pack approach, User Interface and Door/Torch Controls.
 
 **The idea is:**
 * Leverage the new hyperlink API chat buttons (using an image of the tile as a preview.)
