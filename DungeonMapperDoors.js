@@ -195,6 +195,8 @@ var DungeonMapperDoors = DungeonMapperDoors  || (function(){
                obj.set('represents', findObjs({ _type: 'character', name: controllerName})[0].get('_id'));
             }
         });
+        sendChat('Dungeon Mapper', ' ');
+        sendChat('Doors Ready!', 'Doors are ready for combat!');
     },
     
     checkInstall = function() {
