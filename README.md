@@ -8,7 +8,7 @@ The idea is:
 
 Still testing the script (and adding door controls) but you can play around with it now.
 
-Steps to install/use (this is just a beta):
+Steps to install/use:
 
 1. Add the "DungeonMapper" script.
 2. Add the "DungeonMapperTextures".
