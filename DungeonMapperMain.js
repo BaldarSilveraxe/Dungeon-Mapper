@@ -60,7 +60,6 @@ var DungeonMapper = DungeonMapper || (function(){
         {istokenaction: true,   action: '!trn180',     name: '↻Turn-180-Degrees'},
         {istokenaction: true,   action: '!double',     name: '▓»▓-Paste-Selected'},
         {istokenaction: false,  action: '!mainmenu',   name: '♦1-Dungeon-Mapper-Menu'},
-        {istokenaction: false,  action: '!readydoors', name: '♦2-Dungeon-Mapper-Ready-Doors'},
     ],
     
     installedTextures,
@@ -563,8 +562,7 @@ var DungeonMapper = DungeonMapper || (function(){
         _.each(moduleMacros, function(obj) {
             macrosFound = findObjs({ _type: 'macro', name: obj.name});
             tokenAction = macrosFound[0].get('istokenaction');
-            if('!mainmenu' !== macrosFound[0].get('action') &&
-                '!readydoors'!== macrosFound[0].get('action')){ 
+            if('!mainmenu' !== macrosFound[0].get('action')){ 
                 if(true === tokenAction){
                     tokenAction = false;
                 }else{
