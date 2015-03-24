@@ -11,8 +11,12 @@ var DungeonMapper = DungeonMapper || (function(){
     tablDivStyle = ' style="display: table;"',
     trowDivStyle = ' style="display: table-row;"',
     cellDivStyle = ' style="display: table-cell; border-collapse: collapse; padding-left: 0px; padding-right: 0px;"',
-    atagDivStyle = ' style="text-decoration: none; outline: none; border: none; color: #CC0000"',
+    atagDivStyle = ' style="border: 1px solid AliceBlue; background-color: SteelBlue; color: white;"',
+    atagTwoStyle = ' style="border: 1px solid AliceBlue; background-color: DarkCyan; color: white;"',
+    atagThrStyle = ' style="border: 1px solid AliceBlue; background-color: Maroon; color: white;"',
     imagDivStyle = ' style="padding: 0px 0px 0px 0px; outline: none; border: none;"',
+    spanDivStyle = ' style="color:white; font-weight:normal; display:block; width: 150px;"',
+    spanTwoStyle = ' style="color:LemonChiffon; font-weight:normal; display:block; width: 150px;"',
     
     pathDataArray = [
         {pathCSV: '000,001,002,003,004,700,701',         path: [[0,-1],[0,141]]},
@@ -101,6 +105,7 @@ var DungeonMapper = DungeonMapper || (function(){
     
     handleGraphicChange = function(obj) {
         var locatedPaths, locatedTile, imgsrcTruncated, value, featurePathArray, n, args, packName, packKey;
+        
         args = obj.get('name').split('|');
         if(2 !== args.length){
             return;
@@ -482,15 +487,15 @@ var DungeonMapper = DungeonMapper || (function(){
     mainmenu = function() {
         sendChat('Dungeon Mapper Tools', ' ');
         sendChat('Main Menu', '/direct '
-            +'<br><a href="!walls10x10">Walls 10x10</a>'
-            +'<br><a href="!walls20x20">Walls 20x20</a>'
-            +'<br><a href="!walls5x5">Walls 5x5</a>'
-            +'<br><a href="!stairs10x10">Stairs 10x10</a>'
-            +'<br><a href="!doors10x10">Doors 10x10</a>'
-            +'<br><a href="!light5x5">Lights 5x5</a>'
-            +'<br><a href="!packSelect">Select Pack</a>'
-            +'<br><a href="!toggleTokenAction">Token Actions On/Off</a>'
-            +'<br><a href="!readydoors">Ready Doors</a>'
+            +'<br><a href="!walls10x10"' + atagDivStyle + '><span ' + spanDivStyle + '>Walls 10x10</span></a>'
+            +'<br><a href="!walls20x20"' + atagDivStyle + '><span ' + spanDivStyle + '>Walls 20x20</span></a>'
+            +'<br><a href="!walls5x5"' + atagDivStyle + '><span ' + spanDivStyle + '>Walls 5x5</span></a>'
+            +'<br><a href="!stairs10x10"' + atagDivStyle + '><span ' + spanDivStyle + '>Stairs 10x10</span></a>'
+            +'<br><a href="!doors10x10"' + atagDivStyle + '><span ' + spanDivStyle + '>Doors 10x10</span></a>'
+            +'<br><a href="!light5x5"' + atagDivStyle + '><span ' + spanDivStyle + '>Lights 5x5</span></a>'
+            +'<br><a href="!packSelect"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Select Pack</span></a>'
+            +'<br><a href="!toggleTokenAction"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Token Actions On/Off</span></a>'
+            +'<br><a href="!readydoors"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Ready Doors</span></a>'
             );
     },
     
@@ -519,17 +524,17 @@ var DungeonMapper = DungeonMapper || (function(){
             i = i + 2;
         }
         tableText += '</div>';
-        sendChat(heading, '/direct ' + tableText + '<br><a href="!mainmenu">Main Menu</a>');
+        sendChat(heading, '/direct ' + tableText + '<br><a href="!mainmenu"' + atagThrStyle + '><span ' + spanDivStyle + '>Main Menu</span></a>');
     },
     
     packSelect = function() {
         var i = 0, menuText = '';
         sendChat('Dungeon Mapper Tools', ' ');
         while (i < installedTextures.length) { 
-            menuText += '<br><a href="!texture ' + installedTextures[i] + '">' + installedTextures[i] + '</a>'
+            menuText += '<br><a href="!texture ' + installedTextures[i] + '"' + atagDivStyle + '"><span ' + spanDivStyle + '>' + installedTextures[i] + '</span></a>'
             i++;
         }
-        menuText += '<br><a href="!mainmenu">Main Menu</a>';
+        menuText += '<br><a href="!mainmenu"' + atagThrStyle + '><span ' + spanDivStyle + '>Main Menu</span></a>';
         sendChat('Pack Select', menuText);
     },
     
