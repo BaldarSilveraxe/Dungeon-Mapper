@@ -9,12 +9,12 @@ The idea is:
 Still testing the script (and adding door controls) but you can play around with it now.
 
 Steps to install/use (this is just a beta):
-* Add the "DungeonMapper" script.
-* Add the "DungeonMapperTextures".
-* Add the "DungeonMapperDoors".
-* Enter the command "!DungeonMapper."
-* Place a "check" in the "in bar" option for the macro named "♦1-Dungeon-Mapper."
-* Click that macro once it shows up and use the chat pane user interface.
-* Click it any time in the future to bring up the chat pane user interface.
+1. Add the "DungeonMapper" script.
+1. Add the "DungeonMapperTextures".
+1. Add the "DungeonMapperDoors".
+1. Enter the command "!DungeonMapper."
+1. Place a "check" in the "in bar" option for the macro named "♦1-Dungeon-Mapper."
+1. Click that macro once it shows up and use the chat pane user interface.
+1. Click it any time in the future to bring up the chat pane user interface.
 
 Note: it edits the map with the "player bookmark.
