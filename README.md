@@ -1,12 +1,12 @@
 # Dungeon-Mapper
-Roll20 API: Auto Dynamic Lighting That Move With The Tiles, Texture Pack Approach, User Interface And Door Control.
+**Roll20 API:** Auto Dynamic Lighting That Move With The Tiles, Texture Pack Approach, User Interface And Door Control.
 
-The idea is:
+**The idea is:**
 * Leverage the new hyperlink API chat buttons (using an image of the tile as a preview.)
 * Leverage the "object.remove()" so dynamic lighting can move with the tiles.
 * Present a basic approach to "texture packs" for tiles (so you can switch out tiles as you build the map.)
 
-Steps to install/use:
+**Steps to install/use:**
 
 1. Add the "DungeonMapper" script.
 2. Add the "DungeonMapperTextures".
@@ -16,4 +16,4 @@ Steps to install/use:
 6. Click that macro once it shows up and use the chat pane user interface.
 7. Click it any time in the future to bring up the chat pane user interface.
 
-Note: it edits the map with the "player bookmark.
+**Note:** Script edits the map with the "player bookmark."
