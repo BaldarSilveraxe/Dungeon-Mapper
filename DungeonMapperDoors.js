@@ -3,7 +3,7 @@ var DungeonMapperDoors = DungeonMapperDoors  || (function(){
  
     var version = 0.1,
     
-    toggleIcon = 'https://s3.amazonaws.com/files.d20.io/images/8421090/L7gDUkwOw9H73WPAVgFBXg/thumb.png?1427144724',
+    toggleIcon = 'https://s3.amazonaws.com/files.d20.io/images/8434850/ijzdctgdJpFj_Q2NC9GFvg/thumb.png?1427221316',
     leadingURL = 'https://s3.amazonaws.com/files.d20.io/images/',
     
     handleInput = function(msg) {
