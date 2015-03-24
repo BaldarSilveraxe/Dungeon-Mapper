@@ -491,6 +491,7 @@ var DungeonMapper = DungeonMapper || (function(){
             +'<br><a href="!light5x5">Lights 5x5</a>'
             +'<br><a href="!packSelect">Select Pack</a>'
             +'<br><a href="!toggleTokenAction">Token Actions On/Off</a>'
+            +'<br><a href="!readydoors">Ready Doors</a>'
             );
     },
     
