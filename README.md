@@ -2,9 +2,9 @@
 Roll20 API: Auto Dynamic Lighting That Move With The Tiles, Texture Pack Approach, User Interface And Door Control.
 
 The idea is:
-Leverage the new hyperlink API chat buttons (using an image of the tile as a preview.)
-Leverage the "object.remove()" so dynamic lighting can move with the tiles.
-Present a basic approach to "texture packs" for tiles (so you can switch out tiles as you build the map.)
+* Leverage the new hyperlink API chat buttons (using an image of the tile as a preview.)
+* Leverage the "object.remove()" so dynamic lighting can move with the tiles.
+* Present a basic approach to "texture packs" for tiles (so you can switch out tiles as you build the map.)
 
 Still testing the script (and adding door controls) but you can play around with it now.
 
