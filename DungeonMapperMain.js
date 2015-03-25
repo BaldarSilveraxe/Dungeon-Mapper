@@ -11,11 +11,11 @@ var DungeonMapper = DungeonMapper || (function(){
     tablDivStyle = ' style="display: table;"',
     trowDivStyle = ' style="display: table-row;"',
     cellDivStyle = ' style="display: table-cell; border-collapse: collapse; padding-left: 0px; padding-right: 0px;"',
-    atagDivStyle = ' style="border: 1px solid AliceBlue; background-color: SteelBlue; color: white;"',
+    atagOneStyle = ' style="border: 1px solid AliceBlue; background-color: SteelBlue; color: white;"',
     atagTwoStyle = ' style="border: 1px solid AliceBlue; background-color: DarkCyan; color: white;"',
     atagThrStyle = ' style="border: 1px solid AliceBlue; background-color: Maroon; color: white;"',
     imagDivStyle = ' style="padding: 0px 0px 0px 0px; outline: none; border: none;"',
-    spanDivStyle = ' style="color:white; font-weight:normal; display:block; width: 150px;"',
+    spanOneStyle = ' style="color:white; font-weight:normal; display:block; width: 150px;"',
     spanTwoStyle = ' style="color:LemonChiffon; font-weight:normal; display:block; width: 150px;"',
     
     pathDataArray = [
@@ -105,7 +105,6 @@ var DungeonMapper = DungeonMapper || (function(){
     
     handleGraphicChange = function(obj) {
         var locatedPaths, locatedTile, imgsrcTruncated, value, featurePathArray, n, args, packName, packKey;
-        
         args = obj.get('name').split('|');
         if(2 !== args.length){
             return;
@@ -251,8 +250,7 @@ var DungeonMapper = DungeonMapper || (function(){
         var textureSelected = msg.content.replace('!texture ' ,'');
         state.currentTexture = DungeonMapperTextures[textureSelected];
         state.currentTextureName = textureSelected;
-        sendChat('Texture Set to', '/direct "' + textureSelected + '."');
-        mainmenu();
+        sendChat('Texture Set to', '/direct "' + textureSelected + '.');
     },
     
     rotateTile = function(msg, degree) {
@@ -312,7 +310,7 @@ var DungeonMapper = DungeonMapper || (function(){
             sideExclude = '800,801,802,803,900,901,902,903,904,905';
         currentPageId = Campaign().get('playerpageid');
         underscoreName = state.currentTextureName.replace(' ','_');
-    	layer = 'map';
+        layer = 'map';
         currentPage = findObjs({
             _id: currentPageId,                              
             _type: 'page'                          
@@ -487,12 +485,12 @@ var DungeonMapper = DungeonMapper || (function(){
     mainmenu = function() {
         sendChat('Dungeon Mapper Tools', ' ');
         sendChat('Main Menu', '/direct '
-            +'<br><a href="!walls10x10"' + atagDivStyle + '><span ' + spanDivStyle + '>Walls 10x10</span></a>'
-            +'<br><a href="!walls20x20"' + atagDivStyle + '><span ' + spanDivStyle + '>Walls 20x20</span></a>'
-            +'<br><a href="!walls5x5"' + atagDivStyle + '><span ' + spanDivStyle + '>Walls 5x5</span></a>'
-            +'<br><a href="!stairs10x10"' + atagDivStyle + '><span ' + spanDivStyle + '>Stairs 10x10</span></a>'
-            +'<br><a href="!doors10x10"' + atagDivStyle + '><span ' + spanDivStyle + '>Doors 10x10</span></a>'
-            +'<br><a href="!light5x5"' + atagDivStyle + '><span ' + spanDivStyle + '>Lights 5x5</span></a>'
+            +'<br><a href="!walls10x10"' + atagOneStyle + '><span ' + spanOneStyle + '>Walls 10x10</span></a>'
+            +'<br><a href="!walls20x20"' + atagOneStyle + '><span ' + spanOneStyle + '>Walls 20x20</span></a>'
+            +'<br><a href="!walls5x5"' + atagOneStyle + '><span ' + spanOneStyle + '>Walls 5x5</span></a>'
+            +'<br><a href="!stairs10x10"' + atagOneStyle + '><span ' + spanOneStyle + '>Stairs 10x10</span></a>'
+            +'<br><a href="!doors10x10"' + atagOneStyle + '><span ' + spanOneStyle + '>Doors 10x10</span></a>'
+            +'<br><a href="!light5x5"' + atagOneStyle + '><span ' + spanOneStyle + '>Lights 5x5</span></a>'
             +'<br><a href="!packSelect"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Select Pack</span></a>'
             +'<br><a href="!toggleTokenAction"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Token Actions On/Off</span></a>'
             +'<br><a href="!readydoors"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Ready Doors</span></a>'
@@ -507,14 +505,14 @@ var DungeonMapper = DungeonMapper || (function(){
         while (i < tileData.length) {     
             tableText += '<div' + trowDivStyle + '>'
                         +'<div' + cellDivStyle + '>'
-                                +'<a img href="!tileNumber ' + tileData[i].tileNumber + '" ' + atagDivStyle + '>'
+                                +'<a img href="!tileNumber ' + tileData[i].tileNumber + '" ' + atagOneStyle + '>'
                                 +'<img src="' + leadingURL
                                 + tileData[i].urlValue
                                 +' height="' + Math.floor(tileData[i].height/scale) + '" width="' + Math.floor(tileData[i].width/scale) + '" border="0"' + imagDivStyle + '">'
                                 +'</a>'
                         +'</div>'
                         +'<div' + cellDivStyle + '>'
-                                +'<a img href="!tileNumber ' + tileData[i+1].tileNumber + '" ' + atagDivStyle + '>'
+                                +'<a img href="!tileNumber ' + tileData[i+1].tileNumber + '" ' + atagOneStyle + '>'
                                 +'<img src="' + leadingURL
                                 + tileData[i+1].urlValue
                                 +' height="' + Math.floor(tileData[i+1].height/scale) + '" width="' + Math.floor(tileData[i+1].width/scale) + '" border="0"' + imagDivStyle + '">'
@@ -524,17 +522,17 @@ var DungeonMapper = DungeonMapper || (function(){
             i = i + 2;
         }
         tableText += '</div>';
-        sendChat(heading, '/direct ' + tableText + '<br><a href="!mainmenu"' + atagThrStyle + '><span ' + spanDivStyle + '>Main Menu</span></a>');
+        sendChat(heading, '/direct ' + tableText + '<br><a href="!mainmenu"' + atagThrStyle + '><span ' + spanOneStyle + '>Main Menu</span></a>');
     },
     
     packSelect = function() {
         var i = 0, menuText = '';
         sendChat('Dungeon Mapper Tools', ' ');
         while (i < installedTextures.length) { 
-            menuText += '<br><a href="!texture ' + installedTextures[i] + '"' + atagDivStyle + '"><span ' + spanDivStyle + '>' + installedTextures[i] + '</span></a>'
+            menuText += '<br><a href="!texture ' + installedTextures[i] + '"' + atagTwoStyle + '"><span ' + spanTwoStyle + '>' + installedTextures[i] + '</span></a>'
             i++;
         }
-        menuText += '<br><a href="!mainmenu"' + atagThrStyle + '><span ' + spanDivStyle + '>Main Menu</span></a>';
+        menuText += '<br><a href="!mainmenu"' + atagThrStyle + '><span ' + spanOneStyle + '>Main Menu</span></a>';
         sendChat('Pack Select', menuText);
     },
     
@@ -577,7 +575,7 @@ var DungeonMapper = DungeonMapper || (function(){
             }
         });
         sendChat('Dungeon Mapper Settings', ' ');
-        sendChat('Token Actions Changed', 'Be sure to deslect and select any tokens for change to take effect.');
+        sendChat('Token Actions Changed', 'Be sure to deslect and select any tokens for change to take effect.<br><a href="!mainmenu"' + atagThrStyle + '><span ' + spanOneStyle + '>Main Menu</span></a>');
     },
     
     removeMacros = function() {
