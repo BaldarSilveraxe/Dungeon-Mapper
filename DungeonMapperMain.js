@@ -2,6 +2,7 @@ var DungeonMapper = DungeonMapper || (function(){
     'use strict';
  
     var version = 0.1,
+    columnNum = 3, // Number of columns to render
     
     defaultTexture = 'Old School',
     restrictedWalls = '#FF0000',
@@ -15,8 +16,8 @@ var DungeonMapper = DungeonMapper || (function(){
     atagTwoStyle = ' style="border: 1px solid AliceBlue; background-color: DarkCyan; color: white;"',
     atagThrStyle = ' style="border: 1px solid AliceBlue; background-color: Maroon; color: white;"',
     imagDivStyle = ' style="padding: 0px 0px 0px 0px; outline: none; border: none;"',
-    spanOneStyle = ' style="color:white; font-weight:normal; display:block; width: 150px;"',
-    spanTwoStyle = ' style="color:LemonChiffon; font-weight:normal; display:block; width: 150px;"',
+    spanOneStyle = ' style="color:white; font-weight:normal; display:block; width: ' + (columnNum*75) + 'px;"',
+    spanTwoStyle = ' style="color:LemonChiffon; font-weight:normal; display:block; width: ' + (columnNum*75) + 'px;"',
     
     pathDataArray = [
         {pathCSV: '000,001,002,003,004,700,701',         path: [[0,-1],[0,141]]},
@@ -307,7 +308,7 @@ var DungeonMapper = DungeonMapper || (function(){
         var message, value, currentPage, center, middle, sideString, selectedObjs, obj, token,
             eachBlueTile, currentPageId, featurePathArray, pathList, newGraphic, name, layer,
             light_radius, light_dimradius, light_otherplayers, underscoreName, featureState, featureId,
-            sideExclude = '800,801,802,803,900,901,902,903,904,905';
+            sideExclude = '800,801,802,803,900,901,902,903,904,905,880,881';
         currentPageId = Campaign().get('playerpageid');
         underscoreName = state.currentTextureName.replace(' ','_');
         layer = 'map';
@@ -371,7 +372,7 @@ var DungeonMapper = DungeonMapper || (function(){
         }
         if(-1 !== sideExclude.indexOf(state.currentTexture[value].pathKey)){
             featureId = newGraphic.get('_id');
-			layer = 'objects';
+    		layer = 'objects';
             light_radius = '';
             light_dimradius = '';
             light_otherplayers = '';
@@ -382,6 +383,11 @@ var DungeonMapper = DungeonMapper || (function(){
                     light_otherplayers = true;
                     break;
                 case '803': 
+					light_radius = 60;
+                    light_dimradius = 40;
+                    light_otherplayers = true;
+                    break;
+                case '881': 
 					light_radius = 60;
                     light_dimradius = 40;
                     light_otherplayers = true;
@@ -504,22 +510,17 @@ var DungeonMapper = DungeonMapper || (function(){
             +'<div' + tablDivStyle + '>';
         while (i < tileData.length) {     
             tableText += '<div' + trowDivStyle + '>'
-                        +'<div' + cellDivStyle + '>'
-                                +'<a img href="!tileNumber ' + tileData[i].tileNumber + '" ' + atagOneStyle + '>'
-                                +'<img src="' + leadingURL
-                                + tileData[i].urlValue
-                                +' height="' + Math.floor(tileData[i].height/scale) + '" width="' + Math.floor(tileData[i].width/scale) + '" border="0"' + imagDivStyle + '">'
-                                +'</a>'
-                        +'</div>'
-                        +'<div' + cellDivStyle + '>'
-                                +'<a img href="!tileNumber ' + tileData[i+1].tileNumber + '" ' + atagOneStyle + '>'
-                                +'<img src="' + leadingURL
-                                + tileData[i+1].urlValue
-                                +' height="' + Math.floor(tileData[i+1].height/scale) + '" width="' + Math.floor(tileData[i+1].width/scale) + '" border="0"' + imagDivStyle + '">'
-                                +'</a>'
-                        +'</div>'
-                    +'</div>'
-            i = i + 2;
+	    for(var j=0;j < columnNum && (i+j) < tileData.length;j++) {
+                tableText+='<div' + cellDivStyle + '>'
+                    +'<a img href="!tileNumber ' + tileData[i+j].tileNumber + '" ' + atagOneStyle + '>'
+                    +'<img src="' + leadingURL
+                    + tileData[i+j].urlValue
+                    +' height="' + Math.floor(tileData[i+j].height/scale) + '" width="' + Math.floor(tileData[i+j].width/scale) + '" border="0"' + imagDivStyle + '">'
+                    +'</a>'
+                    +'</div>';
+	    }
+            tableText += '</div>';
+	    i += columnNum;
         }
         tableText += '</div>';
         sendChat(heading, '/direct ' + tableText + '<br><a href="!mainmenu"' + atagThrStyle + '><span ' + spanOneStyle + '>Main Menu</span></a>');

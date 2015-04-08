@@ -28,10 +28,10 @@ var DungeonMapperDoors = DungeonMapperDoors  || (function(){
     toggle = function(msg) {
         var obj, objCheck, featureId, token, args, createdId, packName, packKey, 
             swapURL, pathColor, findPaths, pathId, newName;
-            
-        obj =  _.first(msg.selected);
+        for(var i=0;i<msg.selected.length;i++) {
+        obj =  msg.selected[i];
         objCheck = checkSelect(obj);
-        if ( objCheck == false) {return; }
+        if ( objCheck == false) {continue; }
         featureId = obj._id;
         token = getObj('graphic', featureId);
         args = token.get('name').split('|');
@@ -74,7 +74,7 @@ var DungeonMapperDoors = DungeonMapperDoors  || (function(){
                     light_dimradius: 40,
                     light_otherplayers: true
                 }); 
-                return;
+                continue;
             break;
             case '801': 
                 swapURL = leadingURL + _.where(DungeonMapperTextures[packName], {pathKey: '800'})[0].urlValue;
@@ -86,7 +86,7 @@ var DungeonMapperDoors = DungeonMapperDoors  || (function(){
                     light_dimradius: '',
                     light_otherplayers: ''
                 }); 
-                return;
+                continue;
             break;
             case '802': 
                 swapURL = leadingURL + _.where(DungeonMapperTextures[packName], {pathKey: '803'})[0].urlValue;
@@ -98,7 +98,7 @@ var DungeonMapperDoors = DungeonMapperDoors  || (function(){
                     light_dimradius: 40,
                     light_otherplayers: true
                 }); 
-                return;
+                continue;
             break;
             case '803': 
                 swapURL = leadingURL + _.where(DungeonMapperTextures[packName], {pathKey: '802'})[0].urlValue;
@@ -110,7 +110,31 @@ var DungeonMapperDoors = DungeonMapperDoors  || (function(){
                     light_dimradius: '',
                     light_otherplayers: ''
                 }); 
-                return;
+                continue;
+            break;
+            case '880': 
+                swapURL = leadingURL + _.where(DungeonMapperTextures[packName], {pathKey: '881'})[0].urlValue;
+                newName = packName.replace(' ','_') + '|881';
+                token.set({
+                    name: newName,
+                    imgsrc: swapURL,
+                    light_radius: 60,
+                    light_dimradius: 40,
+                    light_otherplayers: true
+                }); 
+                continue;
+            break;
+            case '881': 
+                swapURL = leadingURL + _.where(DungeonMapperTextures[packName], {pathKey: '880'})[0].urlValue;
+                newName = packName.replace(' ','_') + '|880';
+                token.set({
+                    name: newName,
+                    imgsrc: swapURL,
+                    light_radius: '',
+                    light_dimradius: '',
+                    light_otherplayers: ''
+                }); 
+                continue;
             break;
         }
         findPaths = findObjs({ 
@@ -139,6 +163,7 @@ var DungeonMapperDoors = DungeonMapperDoors  || (function(){
             name: newName,
             imgsrc: swapURL
         })
+    }
     },
     
     checkSelect = function(obj) {
@@ -159,7 +184,7 @@ var DungeonMapperDoors = DungeonMapperDoors  || (function(){
     
     readyDoors = function() {
         var obj, args, createdId, packName, packKey, locatedFeaeture, pathColor, findPaths, pathId, 
-        controllerName = 'DoorTorchControl',  featureKeys = '800,801,802,803,900,901,902,903,904,905',
+        controllerName = 'DoorTorchControl',  featureKeys = '800,801,802,803,900,901,902,903,904,905,880,881',
             allObjectImages = findObjs({ _type: 'graphic', layer: 'objects', pageid: Campaign().get('playerpageid')});
         _.each(allObjectImages, function(obj) { 
             args = obj.get('name').split('|');
