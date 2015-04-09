@@ -5,6 +5,7 @@ var DungeonMapper = DungeonMapper || (function(){
     columnNum = 3, // Number of columns to render
     massDuplicateTokenName = "DungeonMapperDuplicateToken", // Token name to paste tokens to.
     massDuplicateTokenPath = "8733117/PjxpbDj12pW8i5RU_VkNAg/thumb.png?1428566975", // Image to represent token.
+    massDuplicateTokenLayer = "objects",
     defaultTexture = 'Old School',
     restrictedWalls = '#FF0000',
     leadingURL = 'https://s3.amazonaws.com/files.d20.io/images/',
@@ -318,7 +319,7 @@ var DungeonMapper = DungeonMapper || (function(){
             type: 'graphic', 
             subtype: 'token', 
             pageid: currentPageId, 
-            layer: "gmlayer", 
+            layer: massDuplicateTokenLayer,
             width: 70,
             height: 70,
             left: 70, 
@@ -377,7 +378,7 @@ var DungeonMapper = DungeonMapper || (function(){
 		    top = Math.round(token.get("top") + 45);
 		    left = Math.round(token.get("left") + 45);
 		}
-		sendChat("API", "Token " + token.get("name") + "(" + i +"):" + Math.round(token.get("left") - xOff) + ","+Math.round(token.get("top") - yOff));
+		//sendChat("API", "Token " + token.get("name") + "(" + i +"):" + Math.round(token.get("left") - xOff) + ","+Math.round(token.get("top") - yOff));
 		newGraphic = createObj('graphic', {
                     type: 'graphic', 
                     subtype: 'token', 
