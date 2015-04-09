@@ -3,11 +3,12 @@ var DungeonMapper = DungeonMapper || (function(){
  
     var version = 0.1,
     columnNum = 3, // Number of columns to render
-    
+    massDuplicateTokenName = "DungeonMapperDuplicateToken", // Token name to paste tokens to.
+    massDuplicateTokenPath = "8733117/PjxpbDj12pW8i5RU_VkNAg/thumb.png?1428566975", // Image to represent token.
     defaultTexture = 'Old School',
     restrictedWalls = '#FF0000',
     leadingURL = 'https://s3.amazonaws.com/files.d20.io/images/',
-    
+
     mainDivStyle = ' style="border: 1px solid black; background-color: white; padding: 0px 0px;"',
     tablDivStyle = ' style="display: table;"',
     trowDivStyle = ' style="display: table-row;"',
@@ -101,6 +102,7 @@ var DungeonMapper = DungeonMapper || (function(){
             case '!rght_1': chooseTile(msg, 'R', 1);  return;
             case '!rght_5': chooseTile(msg, 'R', 5); return;
             case '!double': addTile(msg,'pste'); return;
+	    case '!spawnDuplicateToken': spawnDuplicateToken(msg); return;
         }
     },
     
@@ -304,6 +306,28 @@ var DungeonMapper = DungeonMapper || (function(){
         }
     },
     
+    spawnDuplicateToken = function(msg) {
+	// Clean up old tokens
+	var tokens = findObjs({ _type: 'graphic', name: massDuplicateTokenName});
+	for(var i=0;i<tokens.length;i++) {
+	    tokens[i].remove();
+	}
+	//
+	var currentPageId = Campaign().get('playerpageid');
+        var newGraphic = createObj('graphic', {
+            type: 'graphic', 
+            subtype: 'token', 
+            pageid: currentPageId, 
+            layer: "gmlayer", 
+            width: 70,
+            height: 70,
+            left: 70, 
+            top: 70, 
+            imgsrc: leadingURL + massDuplicateTokenPath,
+            name: massDuplicateTokenName,
+        });
+    },
+
     addTile = function(msg,action) {
         var message, value, currentPage, center, middle, sideString, selectedObjs, obj, token,
             eachBlueTile, currentPageId, featurePathArray, pathList, newGraphic, name, layer,
@@ -316,32 +340,65 @@ var DungeonMapper = DungeonMapper || (function(){
             _id: currentPageId,                              
             _type: 'page'                          
         });
+
+	var targetToken = findObjs({ _type: 'graphic', name: massDuplicateTokenName});
+	if (targetToken.length != 1) {
+	    targetToken = null;
+	}
+	else {
+	    targetToken = targetToken[0];
+	}
+
         if('pste' === action){
             selectedObjs = msg.selected;
-            obj =  _.first(selectedObjs);
-            if ('graphic' === obj._type) {
-                token = getObj('graphic', obj._id);
-            }
-            newGraphic = createObj('graphic', {
-                type: 'graphic', 
-                subtype: 'token', 
-                pageid: currentPageId, 
-                layer: token.get('layer'),
-                width: token.get('width'),
-                height: token.get('height'),
-                left: Math.round(token.get('left') + 35), 
-                top: Math.round(token.get('top') + 35), 
-                imgsrc: token.get('imgsrc'),
-                rotation: token.get('rotation'),
-                flipv: token.get('flipv'),
-                fliph: token.get('fliph'),
-                sides: token.get('sides'),
-                currentSide: token.get('currentSide'),
-                light_radius: token.get('light_radius'),
-                light_dimradius: token.get('light_dimradius'),
-                light_otherplayers: token.get('light_otherplayers'),
-                name: token.get('name')
-            });
+	    // find offsets
+	    var xOff = 999999, yOff = 999999;
+	    for(var i=0;i<selectedObjs.length;i++) {
+		obj =  selectedObjs[i];
+		if ('graphic' === obj._type) {
+                    token = getObj('graphic', obj._id);
+		    if (token.get("left") < xOff)
+			xOff = token.get("left");
+		    if (token.get("top") < yOff)
+			yOff = token.get("top");
+		}
+	    }
+            for(var i=0;i<selectedObjs.length;i++) {
+		obj =  selectedObjs[i];
+		if ('graphic' === obj._type) {
+                    token = getObj('graphic', obj._id);
+		}
+		var top, left;
+		if (targetToken) {
+		    top = Math.round(targetToken.get("top") + token.get("top") - yOff);
+		    left = Math.round(targetToken.get("left") + token.get("left") - xOff);
+		}
+		else {
+		    top = Math.round(token.get("top") + 45);
+		    left = Math.round(token.get("left") + 45);
+		}
+		sendChat("API", "Token " + token.get("name") + "(" + i +"):" + Math.round(token.get("left") - xOff) + ","+Math.round(token.get("top") - yOff));
+		newGraphic = createObj('graphic', {
+                    type: 'graphic', 
+                    subtype: 'token', 
+                    pageid: currentPageId, 
+                    layer: token.get('layer'),
+                    width: token.get('width'),
+                    height: token.get('height'),
+                    left: left, 
+                    top: top, 
+                    imgsrc: token.get('imgsrc'),
+                    rotation: token.get('rotation'),
+                    flipv: token.get('flipv'),
+                    fliph: token.get('fliph'),
+                    sides: token.get('sides'),
+                    currentSide: token.get('currentSide'),
+                    light_radius: token.get('light_radius'),
+                    light_dimradius: token.get('light_dimradius'),
+                    light_otherplayers: token.get('light_otherplayers'),
+                    name: token.get('name')
+		});
+	    }
             return;
         }else{
             message = msg.content.split(' ');
@@ -497,6 +554,7 @@ var DungeonMapper = DungeonMapper || (function(){
             +'<br><a href="!stairs10x10"' + atagOneStyle + '><span ' + spanOneStyle + '>Stairs 10x10</span></a>'
             +'<br><a href="!doors10x10"' + atagOneStyle + '><span ' + spanOneStyle + '>Doors 10x10</span></a>'
             +'<br><a href="!light5x5"' + atagOneStyle + '><span ' + spanOneStyle + '>Lights 5x5</span></a>'
+            +'<br><a href="!spawnDuplicateToken"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Place Duplicate Marker</span></a>'
             +'<br><a href="!packSelect"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Select Pack</span></a>'
             +'<br><a href="!toggleTokenAction"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Token Actions On/Off</span></a>'
             +'<br><a href="!readydoors"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Ready Doors</span></a>'
