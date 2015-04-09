@@ -370,7 +370,7 @@ var DungeonMapper = DungeonMapper || (function(){
                     token = getObj('graphic', obj._id);
 		}
 		var top, left;
-		if (targetToken) {
+		if (targetToken && selectedObjs.length > 1) {
 		    top = Math.round(targetToken.get("top") + token.get("top") - yOff);
 		    left = Math.round(targetToken.get("left") + token.get("left") - xOff);
 		}
