@@ -2,11 +2,14 @@ var DungeonMapper = DungeonMapper || (function(){
     'use strict';
  
     var version = 0.1,
-    
+    columnNum = 3, // Number of columns to render
+    massDuplicateTokenName = "DungeonMapperDuplicateToken", // Token name to paste tokens to.
+    massDuplicateTokenPath = "8733117/PjxpbDj12pW8i5RU_VkNAg/thumb.png?1428566975", // Image to represent token.
+    massDuplicateTokenLayer = "objects",
     defaultTexture = 'Old School',
     restrictedWalls = '#FF0000',
     leadingURL = 'https://s3.amazonaws.com/files.d20.io/images/',
-    
+
     mainDivStyle = ' style="border: 1px solid black; background-color: white; padding: 0px 0px;"',
     tablDivStyle = ' style="display: table;"',
     trowDivStyle = ' style="display: table-row;"',
@@ -15,8 +18,8 @@ var DungeonMapper = DungeonMapper || (function(){
     atagTwoStyle = ' style="border: 1px solid AliceBlue; background-color: DarkCyan; color: white;"',
     atagThrStyle = ' style="border: 1px solid AliceBlue; background-color: Maroon; color: white;"',
     imagDivStyle = ' style="padding: 0px 0px 0px 0px; outline: none; border: none;"',
-    spanOneStyle = ' style="color:white; font-weight:normal; display:block; width: 150px;"',
-    spanTwoStyle = ' style="color:LemonChiffon; font-weight:normal; display:block; width: 150px;"',
+    spanOneStyle = ' style="color:white; font-weight:normal; display:block; width: ' + (columnNum*75) + 'px;"',
+    spanTwoStyle = ' style="color:LemonChiffon; font-weight:normal; display:block; width: ' + (columnNum*75) + 'px;"',
     
     pathDataArray = [
         {pathCSV: '000,001,002,003,004,700,701',         path: [[0,-1],[0,141]]},
@@ -100,6 +103,7 @@ var DungeonMapper = DungeonMapper || (function(){
             case '!rght_1': chooseTile(msg, 'R', 1);  return;
             case '!rght_5': chooseTile(msg, 'R', 5); return;
             case '!double': addTile(msg,'pste'); return;
+	    case '!spawnDuplicateToken': spawnDuplicateToken(msg); return;
         }
     },
     
@@ -303,11 +307,33 @@ var DungeonMapper = DungeonMapper || (function(){
         }
     },
     
+    spawnDuplicateToken = function(msg) {
+	// Clean up old tokens
+	var tokens = findObjs({ _type: 'graphic', name: massDuplicateTokenName});
+	for(var i=0;i<tokens.length;i++) {
+	    tokens[i].remove();
+	}
+	//
+	var currentPageId = Campaign().get('playerpageid');
+        var newGraphic = createObj('graphic', {
+            type: 'graphic', 
+            subtype: 'token', 
+            pageid: currentPageId, 
+            layer: massDuplicateTokenLayer,
+            width: 70,
+            height: 70,
+            left: 70, 
+            top: 70, 
+            imgsrc: leadingURL + massDuplicateTokenPath,
+            name: massDuplicateTokenName,
+        });
+    },
+
     addTile = function(msg,action) {
         var message, value, currentPage, center, middle, sideString, selectedObjs, obj, token,
             eachBlueTile, currentPageId, featurePathArray, pathList, newGraphic, name, layer,
             light_radius, light_dimradius, light_otherplayers, underscoreName, featureState, featureId,
-            sideExclude = '800,801,802,803,900,901,902,903,904,905';
+            sideExclude = '800,801,802,803,900,901,902,903,904,905,880,881';
         currentPageId = Campaign().get('playerpageid');
         underscoreName = state.currentTextureName.replace(' ','_');
         layer = 'map';
@@ -315,32 +341,65 @@ var DungeonMapper = DungeonMapper || (function(){
             _id: currentPageId,                              
             _type: 'page'                          
         });
+
+	var targetToken = findObjs({ _type: 'graphic', name: massDuplicateTokenName});
+	if (targetToken.length != 1) {
+	    targetToken = null;
+	}
+	else {
+	    targetToken = targetToken[0];
+	}
+
         if('pste' === action){
             selectedObjs = msg.selected;
-            obj =  _.first(selectedObjs);
-            if ('graphic' === obj._type) {
-                token = getObj('graphic', obj._id);
-            }
-            newGraphic = createObj('graphic', {
-                type: 'graphic', 
-                subtype: 'token', 
-                pageid: currentPageId, 
-                layer: token.get('layer'),
-                width: token.get('width'),
-                height: token.get('height'),
-                left: Math.round(token.get('left') + 35), 
-                top: Math.round(token.get('top') + 35), 
-                imgsrc: token.get('imgsrc'),
-                rotation: token.get('rotation'),
-                flipv: token.get('flipv'),
-                fliph: token.get('fliph'),
-                sides: token.get('sides'),
-                currentSide: token.get('currentSide'),
-                light_radius: token.get('light_radius'),
-                light_dimradius: token.get('light_dimradius'),
-                light_otherplayers: token.get('light_otherplayers'),
-                name: token.get('name')
-            });
+	    // find offsets
+	    var xOff = 999999, yOff = 999999;
+	    for(var i=0;i<selectedObjs.length;i++) {
+		obj =  selectedObjs[i];
+		if ('graphic' === obj._type) {
+                    token = getObj('graphic', obj._id);
+		    if (token.get("left") < xOff)
+			xOff = token.get("left");
+		    if (token.get("top") < yOff)
+			yOff = token.get("top");
+		}
+	    }
+            for(var i=0;i<selectedObjs.length;i++) {
+		obj =  selectedObjs[i];
+		if ('graphic' === obj._type) {
+                    token = getObj('graphic', obj._id);
+		}
+		var top, left;
+		if (targetToken && selectedObjs.length > 1) {
+		    top = Math.round(targetToken.get("top") + token.get("top") - yOff);
+		    left = Math.round(targetToken.get("left") + token.get("left") - xOff);
+		}
+		else {
+		    top = Math.round(token.get("top") + 45);
+		    left = Math.round(token.get("left") + 45);
+		}
+		//sendChat("API", "Token " + token.get("name") + "(" + i +"):" + Math.round(token.get("left") - xOff) + ","+Math.round(token.get("top") - yOff));
+		newGraphic = createObj('graphic', {
+                    type: 'graphic', 
+                    subtype: 'token', 
+                    pageid: currentPageId, 
+                    layer: token.get('layer'),
+                    width: token.get('width'),
+                    height: token.get('height'),
+                    left: left, 
+                    top: top, 
+                    imgsrc: token.get('imgsrc'),
+                    rotation: token.get('rotation'),
+                    flipv: token.get('flipv'),
+                    fliph: token.get('fliph'),
+                    sides: token.get('sides'),
+                    currentSide: token.get('currentSide'),
+                    light_radius: token.get('light_radius'),
+                    light_dimradius: token.get('light_dimradius'),
+                    light_otherplayers: token.get('light_otherplayers'),
+                    name: token.get('name')
+		});
+	    }
             return;
         }else{
             message = msg.content.split(' ');
@@ -371,7 +430,7 @@ var DungeonMapper = DungeonMapper || (function(){
         }
         if(-1 !== sideExclude.indexOf(state.currentTexture[value].pathKey)){
             featureId = newGraphic.get('_id');
-			layer = 'objects';
+    		layer = 'objects';
             light_radius = '';
             light_dimradius = '';
             light_otherplayers = '';
@@ -382,6 +441,11 @@ var DungeonMapper = DungeonMapper || (function(){
                     light_otherplayers = true;
                     break;
                 case '803': 
+					light_radius = 60;
+                    light_dimradius = 40;
+                    light_otherplayers = true;
+                    break;
+                case '881': 
 					light_radius = 60;
                     light_dimradius = 40;
                     light_otherplayers = true;
@@ -491,6 +555,7 @@ var DungeonMapper = DungeonMapper || (function(){
             +'<br><a href="!stairs10x10"' + atagOneStyle + '><span ' + spanOneStyle + '>Stairs 10x10</span></a>'
             +'<br><a href="!doors10x10"' + atagOneStyle + '><span ' + spanOneStyle + '>Doors 10x10</span></a>'
             +'<br><a href="!light5x5"' + atagOneStyle + '><span ' + spanOneStyle + '>Lights 5x5</span></a>'
+            +'<br><a href="!spawnDuplicateToken"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Place Duplicate Marker</span></a>'
             +'<br><a href="!packSelect"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Select Pack</span></a>'
             +'<br><a href="!toggleTokenAction"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Token Actions On/Off</span></a>'
             +'<br><a href="!readydoors"' + atagTwoStyle + '><span ' + spanTwoStyle + '>Ready Doors</span></a>'
@@ -504,22 +569,17 @@ var DungeonMapper = DungeonMapper || (function(){
             +'<div' + tablDivStyle + '>';
         while (i < tileData.length) {     
             tableText += '<div' + trowDivStyle + '>'
-                        +'<div' + cellDivStyle + '>'
-                                +'<a img href="!tileNumber ' + tileData[i].tileNumber + '" ' + atagOneStyle + '>'
-                                +'<img src="' + leadingURL
-                                + tileData[i].urlValue
-                                +' height="' + Math.floor(tileData[i].height/scale) + '" width="' + Math.floor(tileData[i].width/scale) + '" border="0"' + imagDivStyle + '">'
-                                +'</a>'
-                        +'</div>'
-                        +'<div' + cellDivStyle + '>'
-                                +'<a img href="!tileNumber ' + tileData[i+1].tileNumber + '" ' + atagOneStyle + '>'
-                                +'<img src="' + leadingURL
-                                + tileData[i+1].urlValue
-                                +' height="' + Math.floor(tileData[i+1].height/scale) + '" width="' + Math.floor(tileData[i+1].width/scale) + '" border="0"' + imagDivStyle + '">'
-                                +'</a>'
-                        +'</div>'
-                    +'</div>'
-            i = i + 2;
+	    for(var j=0;j < columnNum && (i+j) < tileData.length;j++) {
+                tableText+='<div' + cellDivStyle + '>'
+                    +'<a img href="!tileNumber ' + tileData[i+j].tileNumber + '" ' + atagOneStyle + '>'
+                    +'<img src="' + leadingURL
+                    + tileData[i+j].urlValue
+                    +' height="' + Math.floor(tileData[i+j].height/scale) + '" width="' + Math.floor(tileData[i+j].width/scale) + '" border="0"' + imagDivStyle + '">'
+                    +'</a>'
+                    +'</div>';
+	    }
+            tableText += '</div>';
+	    i += columnNum;
         }
         tableText += '</div>';
         sendChat(heading, '/direct ' + tableText + '<br><a href="!mainmenu"' + atagThrStyle + '><span ' + spanOneStyle + '>Main Menu</span></a>');
